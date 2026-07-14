@@ -1,5 +1,4 @@
 import Editor from "./editor";
-import Tiptap from "./editor";
 
 interface DocumentIdPageProps {
     params: Promise<{ documentId: string }>

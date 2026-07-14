@@ -1,5 +1,5 @@
 'use client'
-
+import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -11,8 +11,14 @@ const Editor = () => {
                 class: "flex flex-col min-h-[1054px] w-204 pt-10 pr-14 pb-10 cursor-text focus outline-none bg-white border border-[#C7C7C7] print:border-0"
             }
         },
-        extensions: [StarterKit],
-        content: '<p>Hello World! 🌎️</p>',
+        extensions: [
+            StarterKit,
+            TaskList,
+            TaskItem.configure({
+                nested: true,
+            }),
+        ],
+        content: '<p>Test! 🌎️</p>',
         immediatelyRender: false
     })
 
