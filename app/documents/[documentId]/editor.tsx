@@ -2,6 +2,8 @@
 import { useEditorStore } from '@/app/store/use-editor-store'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { useEditor, EditorContent } from '@tiptap/react'
+import { Color, FontFamily, TextStyle } from '@tiptap/extension-text-style'
+import Highlight from '@tiptap/extension-highlight'
 import StarterKit from '@tiptap/starter-kit'
 
 const Editor = () => {
@@ -24,6 +26,12 @@ const Editor = () => {
         extensions: [
             StarterKit,
             TaskList,
+            TextStyle,
+            FontFamily,
+            Color,
+            Highlight.configure({
+                multicolor: true,
+            }),
             TaskItem.configure({
                 nested: true,
             }),
