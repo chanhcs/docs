@@ -7,10 +7,24 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from '@/components/ui/popover';
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useEditorState } from '@tiptap/react';
-import { LucideIcon, Undo2, Redo2, PrinterIcon, SpellCheckIcon, Bold, Italic, Underline, MessageSquarePlusIcon, ListTodoIcon, RemoveFormattingIcon, ChevronDownIcon, HighlighterIcon, PaintBucketIcon, CheckIcon, CirclePlusIcon, PipetteIcon } from 'lucide-react';
+import { LucideIcon, Undo2, Redo2, PrinterIcon, SpellCheckIcon, Bold, Italic, Underline, MessageSquarePlusIcon, ListTodoIcon, RemoveFormattingIcon, ChevronDownIcon, HighlighterIcon, PaintBucketIcon, CheckIcon, CirclePlusIcon, PipetteIcon, Link2Icon, ImageIcon, UploadIcon, GlobeIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon, AlignJustifyIcon, MinusIcon, PlusIcon } from 'lucide-react';
 import { type Level } from '@tiptap/extension-heading'
 import { useState } from 'react';
 interface ToolbarButtonProps {
@@ -138,6 +152,103 @@ const HeadingLevelButton = () => {
     );
 };
 
+const fontSizes = ["8", "9", "10", "11", "12", "14", "18", "24", "30", "36", "48", "60", "72", "96"];
+
+const FontSizeButton = () => {
+    const { editor } = useEditorStore();
+
+    const currentFontSize = useEditorState({
+        editor,
+        selector: ({ editor }) => {
+            const fontSize = editor?.getAttributes("textStyle").fontSize as string | undefined;
+            return fontSize ? fontSize.replace("px", "") : "16";
+        },
+    }) ?? "16";
+
+    const [inputValue, setInputValue] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+
+    const applyFontSize = (value: string) => {
+        const size = parseInt(value, 10);
+        setInputValue(null);
+        setOpen(false);
+        if (!isNaN(size) && size > 0) {
+            editor?.chain().focus().setFontSize(`${size}px`).run();
+        }
+    };
+
+    const stepFontSize = (delta: number) => {
+        const size = parseInt(currentFontSize, 10) + delta;
+        if (size > 0) {
+            editor?.chain().focus().setFontSize(`${size}px`).run();
+        }
+    };
+
+    return (
+        <div className="relative flex items-center gap-x-0.5">
+            <button
+                title="Decrease font size"
+                onClick={() => stepFontSize(-1)}
+                className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80"
+            >
+                <MinusIcon className="size-4" />
+            </button>
+            <input
+                title="Font size"
+                value={inputValue ?? currentFontSize}
+                onFocus={(e) => {
+                    setInputValue(currentFontSize);
+                    setOpen(true);
+                    e.target.select();
+                }}
+                onChange={(e) => setInputValue(e.target.value)}
+                onBlur={() => {
+                    setInputValue(null);
+                    setOpen(false);
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        applyFontSize(e.currentTarget.value);
+                    }
+                    if (e.key === "Escape") {
+                        setInputValue(null);
+                        setOpen(false);
+                        e.currentTarget.blur();
+                    }
+                }}
+                className="h-7 w-10 shrink-0 text-sm text-center border border-neutral-400 rounded-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <button
+                title="Increase font size"
+                onClick={() => stepFontSize(1)}
+                className="h-7 w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80"
+            >
+                <PlusIcon className="size-4" />
+            </button>
+            {open && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 z-50 w-14 max-h-[70vh] overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden rounded-lg bg-white py-1.5 shadow-[0_2px_10px_rgba(0,0,0,0.15)]">
+                    {fontSizes.map((size) => (
+                        <button
+                            key={size}
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                applyFontSize(size);
+                            }}
+                            className={cn(
+                                "w-full py-1 text-sm text-center hover:bg-neutral-100",
+                                currentFontSize === size && "bg-neutral-200/80"
+                            )}
+                        >
+                            {size}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const highlightColors = [
     "#000000", "#434343", "#666666", "#999999", "#b7b7b7", "#cccccc", "#d9d9d9", "#efefef", "#f3f3f3", "#ffffff",
     "#980000", "#ff0000", "#ff9900", "#ffff00", "#00ff00", "#00ffff", "#4a86e8", "#0000ff", "#9900ff", "#ff00ff",
@@ -188,7 +299,7 @@ const TextColorButton = () => {
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger className="h-7 min-w-7 flex flex-col items-center justify-center gap-y-0.5 rounded-sm hover:bg-neutral-200/80 px-1">
-                <span className="text-sm font-medium leading-none">A</span>
+                <span className="size-4 flex items-center justify-center text-sm font-medium leading-none">A</span>
                 <div
                     className="h-1 w-4 rounded-xs border border-neutral-300"
                     style={{ backgroundColor: currentColor ?? "#000000" }}
@@ -342,6 +453,201 @@ const HighlightColorButton = () => {
     );
 };
 
+const LinkButton = () => {
+    const { editor } = useEditorStore();
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState("");
+
+    const isActive = useEditorState({
+        editor,
+        selector: ({ editor }) => editor?.isActive("link") ?? false,
+    });
+
+    const onOpenChange = (open: boolean) => {
+        if (open) {
+            setValue(editor?.getAttributes("link").href ?? "");
+        }
+        setOpen(open);
+    };
+
+    const applyLink = () => {
+        if (value.trim()) {
+            editor?.chain().focus().extendMarkRange("link").setLink({ href: value.trim() }).run();
+        } else {
+            editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+        }
+        setOpen(false);
+    };
+
+    const removeLink = () => {
+        editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+        setOpen(false);
+    };
+
+    return (
+        <Popover open={open} onOpenChange={onOpenChange}>
+            <PopoverTrigger
+                title="Insert link"
+                className={cn(
+                    "h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
+                    isActive && "bg-neutral-200/80"
+                )}
+            >
+                <Link2Icon className="size-4" />
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2.5 flex items-center gap-x-2">
+                <Input
+                    placeholder="https://example.com"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            applyLink();
+                        }
+                    }}
+                    className="h-8 w-56"
+                />
+                <Button size="sm" onClick={applyLink}>Apply</Button>
+                {isActive && (
+                    <Button size="sm" variant="outline" onClick={removeLink}>Remove</Button>
+                )}
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+const ImageButton = () => {
+    const { editor } = useEditorStore();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [imageUrl, setImageUrl] = useState("");
+
+    const insertImage = (src: string) => {
+        editor?.chain().focus().setImage({ src }).run();
+    };
+
+    const onUpload = () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = () => {
+            const file = input.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => insertImage(reader.result as string);
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    };
+
+    const handleUrlSubmit = () => {
+        if (imageUrl.trim()) {
+            insertImage(imageUrl.trim());
+        }
+        setImageUrl("");
+        setIsDialogOpen(false);
+    };
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger
+                    title="Insert image"
+                    className="h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80"
+                >
+                    <ImageIcon className="size-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="p-1 w-auto min-w-0">
+                    <DropdownMenuItem
+                        onClick={onUpload}
+                        className="flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 text-sm whitespace-nowrap"
+                    >
+                        <UploadIcon className="size-4" />
+                        Upload from computer
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setImageUrl("");
+                            setIsDialogOpen(true);
+                        }}
+                        className="flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80 text-sm whitespace-nowrap"
+                    >
+                        <GlobeIcon className="size-4" />
+                        By URL
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Insert image by URL</DialogTitle>
+                    </DialogHeader>
+                    <Input
+                        placeholder="https://example.com/image.png"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleUrlSubmit();
+                            }
+                        }}
+                    />
+                    <DialogFooter>
+                        <Button onClick={handleUrlSubmit} disabled={!imageUrl.trim()}>Insert</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+};
+
+const alignments = [
+    { label: "Align left", value: "left", icon: AlignLeftIcon },
+    { label: "Align center", value: "center", icon: AlignCenterIcon },
+    { label: "Align right", value: "right", icon: AlignRightIcon },
+    { label: "Justify", value: "justify", icon: AlignJustifyIcon },
+];
+
+const AlignButton = () => {
+    const { editor } = useEditorStore();
+
+    const currentAlignment = useEditorState({
+        editor,
+        selector: ({ editor }) =>
+            alignments.find(({ value }) => editor?.isActive({ textAlign: value }))?.value ?? "left",
+    });
+
+    const CurrentIcon = alignments.find(({ value }) => value === currentAlignment)?.icon ?? AlignLeftIcon;
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger
+                title="Align"
+                className="h-7 min-w-7 px-1 flex items-center justify-center gap-x-0.5 rounded-sm hover:bg-neutral-200/80"
+            >
+                <CurrentIcon className="size-4" />
+                <ChevronDownIcon className="size-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-row items-center gap-x-0.5 w-auto min-w-0">
+                {alignments.map(({ label, value, icon: Icon }) => (
+                    <DropdownMenuItem
+                        key={value}
+                        title={label}
+                        onClick={() => editor?.chain().focus().setTextAlign(value).run()}
+                        className={cn(
+                            "size-7 p-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
+                            currentAlignment === value && "bg-neutral-200/80"
+                        )}
+                    >
+                        <Icon className="size-4" />
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+};
+
 const Toolbar = () => {
     const { editor } = useEditorStore();
 
@@ -353,7 +659,8 @@ const Toolbar = () => {
             isBold: editor?.isActive("bold") ?? false,
             isItalic: editor?.isActive("italic") ?? false,
             isUnderline: editor?.isActive("underline") ?? false,
-            isTaskList: editor?.isActive("taskList") ?? false
+            isTaskList: editor?.isActive("taskList") ?? false,
+            isComment: editor?.isActive("liveblocksCommentMark") ?? false
         }),
     });
 
@@ -407,12 +714,6 @@ const Toolbar = () => {
         ],
         [
             {
-                label: "Comment",
-                icon: MessageSquarePlusIcon,
-                isActive: false,
-                onClick: () => console.log("Comment"),
-            },
-            {
                 label: "List Todo",
                 icon: ListTodoIcon,
                 isActive: editorState?.isTaskList,
@@ -423,24 +724,35 @@ const Toolbar = () => {
                 icon: RemoveFormattingIcon,
                 onClick: () => editor?.chain().focus().unsetAllMarks().run(),
             },
+            {
+                label: "Comment",
+                icon: MessageSquarePlusIcon,
+                isActive: editorState?.isComment,
+                onClick: () => console.log("Comment"),
+            },
         ]
     ]
     return (
-        <div className="bg-[#f0f4f9] min-h-10 rounded-2xl flex items-center px-4">
+        <div className="bg-[#f0f4f9] min-h-10 rounded-2xl flex items-center gap-x-0.5 px-4">
             {sections[0].map(item => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
-            <Separator orientation='vertical' className="h-6 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
             <FontFamilyButton />
-            <Separator orientation='vertical' className="h-6 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
             <HeadingLevelButton />
-            <Separator orientation='vertical' className="h-6 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <FontSizeButton />
+            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
             {sections[1].map(item => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
             <TextColorButton />
             <HighlightColorButton />
-            <Separator orientation='vertical' className="h-6 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <LinkButton />
+            <ImageButton />
+            <AlignButton />
             {sections[2].map(item => (
                 <ToolbarButton key={item.label} {...item} />
             ))}

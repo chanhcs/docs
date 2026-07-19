@@ -8,7 +8,7 @@ interface DocumentIdPageProps {
 const documentIdPage = async ({ params }: DocumentIdPageProps) => {
     const { documentId } = await params;
     return (
-        <div className="h-screen bg-[#FAFBFD]">
+        <div className="h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
             <div className="px-4 pt-2">
                 <Toolbar />
             </div>

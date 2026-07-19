@@ -2,8 +2,10 @@
 import { useEditorStore } from '@/app/store/use-editor-store'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { useEditor, EditorContent } from '@tiptap/react'
-import { Color, FontFamily, TextStyle } from '@tiptap/extension-text-style'
+import { Color, FontFamily, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
+import ImageResize from 'tiptap-extension-resize-image'
+import TextAlign from '@tiptap/extension-text-align'
 import StarterKit from '@tiptap/starter-kit'
 
 const Editor = () => {
@@ -24,11 +26,22 @@ const Editor = () => {
             }
         },
         extensions: [
-            StarterKit,
+            StarterKit.configure({
+                link: {
+                    openOnClick: false,
+                    autolink: true,
+                    defaultProtocol: 'https',
+                },
+            }),
             TaskList,
             TextStyle,
             FontFamily,
+            FontSize,
             Color,
+            ImageResize,
+            TextAlign.configure({
+                types: ['heading', 'paragraph'],
+            }),
             Highlight.configure({
                 multicolor: true,
             }),
@@ -41,7 +54,7 @@ const Editor = () => {
 
     return (
 
-        <div className='size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible'>
+        <div className='flex-1 min-h-0 overflow-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible'>
             <div className='min-w-max flex justify-center py-4  mx-auto print:w-full print:min-w-0'>
                 <EditorContent editor={editor} />
             </div>
