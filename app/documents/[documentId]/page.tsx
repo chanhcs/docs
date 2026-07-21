@@ -1,4 +1,5 @@
 import Editor from "./editor";
+import Navbar from "./navbar";
 import Toolbar from "./toolbar";
 
 interface DocumentIdPageProps {
@@ -9,7 +10,8 @@ const documentIdPage = async ({ params }: DocumentIdPageProps) => {
     const { documentId } = await params;
     return (
         <div className="h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
-            <div className="px-4 pt-2">
+            <div className="flex flex-col px-4 pt-2 gap-2">
+                <Navbar />
                 <Toolbar />
             </div>
             <Editor />

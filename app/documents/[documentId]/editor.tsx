@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 import { useEditorStore } from '@/app/store/use-editor-store'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -7,9 +8,16 @@ import Highlight from '@tiptap/extension-highlight'
 import ImageResize from 'tiptap-extension-resize-image'
 import TextAlign from '@tiptap/extension-text-align'
 import StarterKit from '@tiptap/starter-kit'
+import Ruler from './ruler'
+
+const editorAttributes = (leftMargin: number, rightMargin: number) => ({
+    spellcheck: "false",
+    style: `padding-left: ${leftMargin}px; padding-right: ${rightMargin}px`,
+    class: "flex flex-col min-h-[1054px] w-204 pt-10 pb-10 cursor-text focus outline-none bg-white border border-[#C7C7C7] print:border-0"
+})
 
 const Editor = () => {
-    const { setEditor } = useEditorStore();
+    const { setEditor, leftMargin, rightMargin } = useEditorStore();
 
     const editor = useEditor({
         onCreate({ editor }) {
@@ -19,11 +27,7 @@ const Editor = () => {
             setEditor(null)
         },
         editorProps: {
-            attributes: {
-                spellcheck: "false",
-                style: "padding-left: 56px; padding-right: 56px",
-                class: "flex flex-col min-h-[1054px] w-204 pt-10 pr-14 pb-10 cursor-text focus outline-none bg-white border border-[#C7C7C7] print:border-0"
-            }
+            attributes: editorAttributes(leftMargin, rightMargin)
         },
         extensions: [
             StarterKit.configure({
@@ -52,11 +56,23 @@ const Editor = () => {
         immediatelyRender: false
     })
 
+    useEffect(() => {
+        if (!editor) return
+        editor.setOptions({
+            editorProps: {
+                attributes: editorAttributes(leftMargin, rightMargin)
+            }
+        })
+    }, [editor, leftMargin, rightMargin])
+
     return (
 
         <div className='flex-1 min-h-0 overflow-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible'>
-            <div className='min-w-max flex justify-center py-4  mx-auto print:w-full print:min-w-0'>
-                <EditorContent editor={editor} />
+            <div className='min-w-max flex flex-col items-center mx-auto print:w-full print:min-w-0'>
+                <Ruler />
+                <div className='py-4 print:p-0'>
+                    <EditorContent editor={editor} />
+                </div>
             </div>
         </div>
     )
