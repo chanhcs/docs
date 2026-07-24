@@ -1,14 +1,12 @@
-import Link from "next/link";
 import Navbar from "./navbar";
+import TemplatesGallery from "./templates-gallery";
 
 const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex h-screen items-center justify-center">
-        <Link href='/documents/123'>
-          <span className="text-blue-500 underline">Link go to document</span>
-        </Link>
+      <div className="mt-6">
+        <TemplatesGallery />
       </div>
     </div>
   )
