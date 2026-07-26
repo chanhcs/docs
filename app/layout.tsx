@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ConvexClientProvider } from "@/components/convex-client-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
