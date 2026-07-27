@@ -11,7 +11,7 @@ export const templates = [
     },
     {
         id: "recipe",
-        label: "recipe",
+        label: "Recipe",
         imageUrl: "/recipe.png"
     },
     {

@@ -9,7 +9,7 @@ interface DocumentIdPageProps {
 const documentIdPage = async ({ params }: DocumentIdPageProps) => {
     const { documentId } = await params;
     return (
-        <div className="h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
+        <div className="min-h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
             <div className="flex flex-col px-4 pt-2 gap-2">
                 <Navbar />
                 <Toolbar />

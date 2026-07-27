@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SearchInput from "./search-input";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
     return (
@@ -14,7 +15,7 @@ const Navbar = () => {
                 <h3 className="text-xl font-medium">Docs</h3>
             </div>
             <SearchInput />
-            <div className="shrink-0" />
+            <UserButton />
         </nav>
     );
 };
