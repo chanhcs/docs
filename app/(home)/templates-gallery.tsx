@@ -10,13 +10,30 @@ import {
 } from "@/components/ui/carousel";
 import { templates } from "../constants/templates";
 import { useRouter } from "next/navigation";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const TemplatesGallery = () => {
     const router = useRouter()
+    const create = useMutation(api.documents.create)
+    const [isCreating, setIsCreating] = useState(false);
 
-    const handleTemplateClick = () => {
-        router.push("/documents/123")
-    }
+    const handleTemplateClick = async (title: string, initialContent: string) => {
+        if (isCreating) return;
+
+        setIsCreating(true);
+        try {
+            const documentId = await create({ title, initialContent });
+            console.log(documentId, "documentId")
+            router.push(`/documents/${documentId}`);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsCreating(false);
+        }
+    };
 
     return (
         <div className="w-full bg-muted/60 border-b">
@@ -27,8 +44,11 @@ const TemplatesGallery = () => {
                         {templates.map(template => (
                             <CarouselItem
                                 key={template.id}
-                                onClick={handleTemplateClick}
-                                className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
+                                onClick={() => handleTemplateClick(template.label, "")}
+                                className={cn(
+                                    "pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6",
+                                    isCreating && "pointer-events-none opacity-50"
+                                )}
                             >
                                 <div className="flex flex-col gap-2 cursor-pointer group">
                                     <div className="relative aspect-3/4 w-full overflow-hidden rounded-md border bg-white shadow-sm transition-all duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-md group-hover:border-blue-400 group-hover:ring-1 group-hover:ring-blue-400/50">
