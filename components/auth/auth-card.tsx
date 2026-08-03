@@ -35,8 +35,6 @@ export function AuthCard() {
                         {mode === "sign-in" ? <SignInForm /> : <SignUpForm />}
                     </div>
 
-                    <div id="clerk-captcha" />
-
                     <p className="mt-6 text-center text-sm text-gray-500">
                         {mode === "sign-in"
                             ? "Don't have an account? "

@@ -14,6 +14,8 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { toast } from "sonner";
+import { getConvexErrorMessage } from "@/lib/errors";
 
 const TemplatesGallery = () => {
     const router = useRouter()
@@ -26,10 +28,11 @@ const TemplatesGallery = () => {
         setIsCreating(true);
         try {
             const documentId = await create({ title, initialContent });
-            console.log(documentId, "documentId")
+            toast.success("Document created");
             router.push(`/documents/${documentId}`);
         } catch (error) {
             console.error(error);
+            toast.error(getConvexErrorMessage(error, "Couldn't create the document."));
         } finally {
             setIsCreating(false);
         }

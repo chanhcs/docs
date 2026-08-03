@@ -1,45 +1,26 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useClerk, useSignIn } from "@clerk/nextjs";
-import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { useSignIn } from "@clerk/nextjs";
 import { GoogleIcon } from "./google-icon";
 import { PasswordInput } from "./password-input";
-
-const RATE_LIMIT_MESSAGE = "Too many attempts. Please wait a moment and try again.";
-
-function isRateLimitError(err: unknown): boolean {
-    if (isClerkAPIResponseError(err) && err.status === 429) return true;
-    if (err && typeof err === "object") {
-        if ((err as { status?: unknown }).status === 429) return true;
-        const cause = (err as { cause?: unknown }).cause;
-        if (cause && typeof cause === "object" && (cause as { status?: unknown }).status === 429) return true;
-    }
-    return false;
-}
-
-function getErrorMessage(err: unknown, fallback: string): string {
-    if (isRateLimitError(err)) {
-        return RATE_LIMIT_MESSAGE;
-    }
-    if (isClerkAPIResponseError(err)) {
-        return err.errors[0]?.longMessage || err.errors[0]?.message || fallback;
-    }
-    if (err instanceof Error) {
-        return err.message || fallback;
-    }
-    return fallback;
-}
+import { getErrorMessage } from "./errors";
+import { toast } from "sonner";
 
 export function SignInForm() {
     const { signIn, fetchStatus } = useSignIn();
-    const clerk = useClerk();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [googleLoading, setGoogleLoading] = useState(false);
 
     const isSubmitting = fetchStatus === "fetching";
+
+    function showError(err: unknown, fallback: string) {
+        const message = getErrorMessage(err, fallback);
+        setError(message);
+        toast.error(message);
+    }
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -48,7 +29,7 @@ export function SignInForm() {
             const { error } = await signIn.password({ emailAddress: email, password });
             if (error) {
                 console.error("signIn.password failed:", error);
-                setError(isRateLimitError(error) ? RATE_LIMIT_MESSAGE : error.longMessage || error.message || "Incorrect email or password.");
+                showError(error, "Incorrect email or password.");
                 return;
             }
             if (signIn.status === "complete") {
@@ -56,22 +37,30 @@ export function SignInForm() {
             }
         } catch (err) {
             console.error("signIn.password threw:", err);
-            setError(getErrorMessage(err, "Incorrect email or password."));
+            showError(err, "Incorrect email or password.");
         }
     }
 
     async function handleGoogle() {
         setError(null);
         setGoogleLoading(true);
+        const fallback = "Couldn't sign in with Google. Please try again.";
         try {
-            await clerk.client.signIn.authenticateWithRedirect({
+            // On success the browser leaves the page, so googleLoading is only
+            // reset on the paths that keep the user here.
+            const { error } = await signIn.sso({
                 strategy: "oauth_google",
-                redirectUrl: `${window.location.origin}/sso-callback`,
-                redirectUrlComplete: `${window.location.origin}/`,
+                redirectUrl: `${window.location.origin}/`,
+                redirectCallbackUrl: `${window.location.origin}/sso-callback`,
             });
+            if (error) {
+                console.error("signIn.sso failed:", error);
+                showError(error, fallback);
+                setGoogleLoading(false);
+            }
         } catch (err) {
-            console.error("signIn Google redirect failed:", err);
-            setError("Couldn't sign in with Google. Please try again.");
+            console.error("signIn.sso threw:", err);
+            showError(err, fallback);
             setGoogleLoading(false);
         }
     }

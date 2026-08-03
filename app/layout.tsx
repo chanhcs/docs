@@ -3,6 +3,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
             {children}
           </ConvexClientProvider>
         </NuqsAdapter>
+        <Toaster richColors position="bottom-right" />
       </body>
     </html>
   );

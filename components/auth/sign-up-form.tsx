@@ -2,18 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { useSignUp } from "@clerk/nextjs";
-import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { PasswordInput } from "./password-input";
-
-function getErrorMessage(err: unknown, fallback: string): string {
-    if (isClerkAPIResponseError(err)) {
-        return err.errors[0]?.longMessage || err.errors[0]?.message || fallback;
-    }
-    if (err instanceof Error) {
-        return err.message || fallback;
-    }
-    return fallback;
-}
+import { getErrorMessage } from "./errors";
+import { toast } from "sonner";
 
 export function SignUpForm() {
     const { signUp, fetchStatus } = useSignUp();
@@ -26,18 +17,25 @@ export function SignUpForm() {
 
     const isSubmitting = fetchStatus === "fetching";
 
+    function showError(err: unknown, fallback: string) {
+        const message = getErrorMessage(err, fallback);
+        setError(message);
+        toast.error(message);
+    }
+
     async function handleDetailsSubmit(e: FormEvent) {
         e.preventDefault();
         setError(null);
         if (password !== confirmPassword) {
             setError("Passwords do not match.");
+            toast.error("Passwords do not match.");
             return;
         }
         try {
             const { error } = await signUp.password({ emailAddress: email, password });
             if (error) {
                 console.error("signUp.password failed:", error);
-                setError(error.longMessage || error.message || "Couldn't create your account. Please try again.");
+                showError(error, "Couldn't create your account. Please try again.");
                 return;
             }
             if (signUp.status === "complete") {
@@ -47,17 +45,13 @@ export function SignUpForm() {
             const sendResult = await signUp.verifications.sendEmailCode();
             if (sendResult.error) {
                 console.error("signUp.verifications.sendEmailCode failed:", sendResult.error);
-                setError(
-                    sendResult.error.longMessage ||
-                        sendResult.error.message ||
-                        "Couldn't send the verification code. Please try again."
-                );
+                showError(sendResult.error, "Couldn't send the verification code. Please try again.");
                 return;
             }
             setStep("verify");
         } catch (err) {
             console.error("signUp.password threw:", err);
-            setError(getErrorMessage(err, "Couldn't create your account. Please try again."));
+            showError(err, "Couldn't create your account. Please try again.");
         }
     }
 
@@ -68,7 +62,7 @@ export function SignUpForm() {
             const { error } = await signUp.verifications.verifyEmailCode({ code });
             if (error) {
                 console.error("signUp.verifications.verifyEmailCode failed:", error);
-                setError(error.longMessage || error.message || "Incorrect verification code.");
+                showError(error, "Incorrect verification code.");
                 return;
             }
             if (signUp.status === "complete") {
@@ -76,7 +70,7 @@ export function SignUpForm() {
             }
         } catch (err) {
             console.error("signUp.verifications.verifyEmailCode threw:", err);
-            setError(getErrorMessage(err, "Incorrect verification code."));
+            showError(err, "Incorrect verification code.");
         }
     }
 
@@ -156,6 +150,8 @@ export function SignUpForm() {
             </div>
 
             {error && <p className="text-sm text-red-600">{error}</p>}
+
+            <div id="clerk-captcha" />
 
             <button
                 type="submit"

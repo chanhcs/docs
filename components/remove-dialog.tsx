@@ -15,6 +15,8 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Id } from "@/convex/_generated/dataModel";
+import { toast } from "sonner";
+import { getConvexErrorMessage } from "@/lib/errors";
 
 interface RemoveDialogProps {
     documentId: Id<"documents">;
@@ -36,9 +38,11 @@ export const RemoveDialog = ({ documentId, children, onOpenChange }: RemoveDialo
         setIsRemoving(true);
         try {
             await remove({ id: documentId });
+            toast.success("Document deleted");
             setOpen(false);
         } catch (error) {
             console.error(error);
+            toast.error(getConvexErrorMessage(error, "Couldn't delete the document."));
         } finally {
             setIsRemoving(false);
         }

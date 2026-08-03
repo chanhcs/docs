@@ -15,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Id } from "@/convex/_generated/dataModel";
+import { toast } from "sonner";
+import { getConvexErrorMessage } from "@/lib/errors";
 
 interface RenameDialogProps {
     documentId: Id<"documents">;
@@ -39,9 +41,11 @@ export const RenameDialog = ({ documentId, initialTitle, children, onOpenChange 
         setIsUpdating(true);
         try {
             await update({ id: documentId, title: title.trim() || "Untitled document" });
+            toast.success("Document renamed");
             setOpen(false);
         } catch (error) {
             console.error(error);
+            toast.error(getConvexErrorMessage(error, "Couldn't rename the document."));
         } finally {
             setIsUpdating(false);
         }
