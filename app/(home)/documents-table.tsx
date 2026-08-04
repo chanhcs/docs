@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Table, TableCell, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 import { Doc } from "@/convex/_generated/dataModel";
 import { PaginationStatus } from "convex/react";
@@ -71,9 +72,20 @@ interface DocumentRowProps {
 
 const DocumentRow = ({ document }: DocumentRowProps) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const router = useRouter();
+
+    const href = `/documents/${document._id}`;
+
+    const onRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+        if (e.metaKey || e.ctrlKey) {
+            window.open(href, "_blank");
+            return;
+        }
+        router.push(href);
+    };
 
     return (
-        <TableRow className="cursor-pointer">
+        <TableRow className="cursor-pointer" onClick={onRowClick}>
             <TableCell className="flex items-center gap-2 min-w-0">
                 <SiGoogledocs className="size-6 shrink-0 fill-blue-500" />
                 <span className="truncate">{document.title}</span>
@@ -85,7 +97,10 @@ const DocumentRow = ({ document }: DocumentRowProps) => {
                 </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">{format(document._creationTime, "MMM d, yyyy")}</TableCell>
-            <TableCell className="text-right">
+            <TableCell
+                className="text-right"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                     <DropdownMenuTrigger
                         render={<Button variant="ghost" size="icon" className="size-7" />}

@@ -9,6 +9,7 @@ import ImageResize from 'tiptap-extension-resize-image'
 import TextAlign from '@tiptap/extension-text-align'
 import StarterKit from '@tiptap/starter-kit'
 import Ruler from './ruler'
+import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 
 const editorAttributes = (leftMargin: number, rightMargin: number) => ({
     spellcheck: "false",
@@ -18,6 +19,7 @@ const editorAttributes = (leftMargin: number, rightMargin: number) => ({
 
 const Editor = () => {
     const { setEditor, leftMargin, rightMargin } = useEditorStore();
+    const liveblocks = useLiveblocksExtension();
 
     const editor = useEditor({
         onCreate({ editor }) {
@@ -30,7 +32,9 @@ const Editor = () => {
             attributes: editorAttributes(leftMargin, rightMargin)
         },
         extensions: [
+            liveblocks,
             StarterKit.configure({
+                undoRedo: false,
                 link: {
                     openOnClick: false,
                     autolink: true,
