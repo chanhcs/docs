@@ -34,7 +34,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
                         <AuthCard />
                     </Unauthenticated>
                     <AuthLoading>
-                        <Loader label="Loading..." />
+                        <Loader label="Auth Loading..." />
                     </AuthLoading>
                 </>
             )}

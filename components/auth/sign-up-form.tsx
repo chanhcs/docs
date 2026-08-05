@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import { PasswordInput } from "./password-input";
 import { getErrorMessage } from "./errors";
-import { toast } from "sonner";
 
 export function SignUpForm() {
     const { signUp, fetchStatus } = useSignUp();
@@ -20,15 +19,13 @@ export function SignUpForm() {
     function showError(err: unknown, fallback: string) {
         const message = getErrorMessage(err, fallback);
         setError(message);
-        toast.error(message);
     }
 
-    async function handleDetailsSubmit(e: FormEvent) {
+    async function handleDetailsSubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
         if (password !== confirmPassword) {
             setError("Passwords do not match.");
-            toast.error("Passwords do not match.");
             return;
         }
         try {
@@ -55,7 +52,7 @@ export function SignUpForm() {
         }
     }
 
-    async function handleVerifySubmit(e: FormEvent) {
+    async function handleVerifySubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
         try {

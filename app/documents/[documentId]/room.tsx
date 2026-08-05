@@ -1,34 +1,48 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
     LiveblocksProvider,
     RoomProvider,
     ClientSideSuspense,
+    useErrorListener,
 } from "@liveblocks/react/suspense";
 import { useParams } from "next/navigation";
+import { Loader } from "@/components/loader";
 
-// NEXT_PUBLIC_* được Next.js inline lúc build, nên phải viết nguyên biểu thức
-// process.env.TEN_BIEN thì mới được thay thế đúng.
-function getPublicApiKey(): string {
-    const key = process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY;
-    if (!key) {
-        throw new Error(
-            "Thiếu NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY. Thêm biến này vào .env.local rồi khởi động lại dev server."
+function RoomErrorSurface({ roomId }: { roomId: string }) {
+    const [error, setError] = useState<Error | null>(null);
+
+    useErrorListener((liveblocksError) => {
+        if (liveblocksError.context.roomId !== roomId) {
+            return;
+        }
+        setError(
+            (current) =>
+                current ??
+                new Error(liveblocksError.message, { cause: liveblocksError })
         );
-    }
-    return key;
-}
+    });
 
-const publicApiKey = getPublicApiKey();
+    if (error) {
+        throw error;
+    }
+
+    return null;
+}
 
 export function Room({ children }: { children: ReactNode }) {
     const params = useParams();
+    const roomId = params.documentId as string;
 
     return (
-        <LiveblocksProvider publicApiKey={publicApiKey}>
-            <RoomProvider id={params.documentId as string}>
-                <ClientSideSuspense fallback={<div>Loading…</div>}>
+        <LiveblocksProvider
+            throttle={16}
+            authEndpoint="/api/liveblocks-auth"
+        >
+            <RoomErrorSurface roomId={roomId} />
+            <RoomProvider id={roomId}>
+                <ClientSideSuspense fallback={<Loader label="Room loading..." />}>
                     {children}
                 </ClientSideSuspense>
             </RoomProvider>

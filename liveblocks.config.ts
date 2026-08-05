@@ -11,8 +11,11 @@ declare global {
     // Custom user info set when authenticating with a secret key
     UserMeta: {
       id: string;
-      // Ví dụ: { name: string; avatar: string } — dùng cho useSelf, useUser, useOthers
-      info: Record<string, never>;
+      // Thông tin user gửi kèm khi authenticate — dùng cho useSelf, useUser, useOthers
+      info: {
+        name: string;
+        avatar: string;
+      };
     };
 
     // Custom events, for useBroadcastEvent, useEventListener

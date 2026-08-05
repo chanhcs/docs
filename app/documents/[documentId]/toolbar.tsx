@@ -728,7 +728,7 @@ const Toolbar = () => {
                 label: "Comment",
                 icon: MessageSquarePlusIcon,
                 isActive: editorState?.isComment,
-                onClick: () => console.log("Comment"),
+                onClick: () => editor?.chain().focus().addPendingComment(),
             },
         ]
     ]

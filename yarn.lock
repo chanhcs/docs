@@ -873,6 +873,22 @@
   resolved "https://registry.yarnpkg.com/@liveblocks/core/-/core-3.23.0.tgz#d12ef08ed88aa63065a83cd42071f7d7d9650db5"
   integrity sha512-VG7BTOxTVGE0pNV/uaF5rC8C6FqTy7uR0NPFZGDLQqi2gFYX2MCf4EuPydToFXF54WRWUukzQmItkhFMQb23Cg==
 
+"@liveblocks/core@3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@liveblocks/core/-/core-3.23.1.tgz#80046c837789addb0f0d418ac27875af05271beb"
+  integrity sha512-6N6QEyzy2VDFxxn2aAPjEXSnzho387LLGdxvaC2Fo50qDhS1SeSuDhbP0Oscx+5LsQTNAg7vpw+1UPpCB+o35g==
+
+"@liveblocks/node@^3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@liveblocks/node/-/node-3.23.1.tgz#dc86b945e3168a38505915dacb6dbc312914f6aa"
+  integrity sha512-D33zOK3n9bNXyXeKf5YWMV8wLi/76Fjt239Mzfh/9cnXpKy5HwxB+bWhdYBJLUaqxz1NODwJ5Dai1x8/YPZaRw==
+  dependencies:
+    "@liveblocks/core" "3.23.1"
+    "@stablelib/base64" "^1.0.1"
+    fast-sha256 "^1.3.0"
+    marked "^15.0.11"
+    node-fetch "^2.6.1"
+
 "@liveblocks/react-tiptap@^3.23.0":
   version "3.23.0"
   resolved "https://registry.yarnpkg.com/@liveblocks/react-tiptap/-/react-tiptap-3.23.0.tgz#813d9cbecb070598e8516b4d2148450d58968997"
@@ -1855,7 +1871,7 @@
   resolved "https://registry.npmjs.org/@sindresorhus/merge-streams/-/merge-streams-4.0.0.tgz"
   integrity sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==
 
-"@stablelib/base64@^1.0.0":
+"@stablelib/base64@^1.0.0", "@stablelib/base64@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@stablelib/base64/-/base64-1.0.1.tgz#bdfc1c6d3a62d7a3b7bbc65b6cce1bb4561641be"
   integrity sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==
@@ -5108,6 +5124,13 @@ node-exports-info@^1.6.0:
     object.entries "^1.1.9"
     semver "^6.3.1"
 
+node-fetch@^2.6.1:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-releases@^2.0.50:
   version "2.0.50"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.50.tgz"
@@ -6473,6 +6496,11 @@ toidentifier@~1.0.1:
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
 ts-api-utils@^2.5.0:
   version "2.5.0"
   resolved "https://registry.npmjs.org/ts-api-utils/-/ts-api-utils-2.5.0.tgz"
@@ -6730,6 +6758,19 @@ w3c-keyname@^2.2.0:
   version "2.2.8"
   resolved "https://registry.npmjs.org/w3c-keyname/-/w3c-keyname-2.2.8.tgz"
   integrity sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==
+
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
 
 which-boxed-primitive@^1.1.0, which-boxed-primitive@^1.1.1:
   version "1.1.1"

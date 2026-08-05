@@ -10,6 +10,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import StarterKit from '@tiptap/starter-kit'
 import Ruler from './ruler'
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
+import { Threads } from './threads'
 
 const editorAttributes = (leftMargin: number, rightMargin: number) => ({
     spellcheck: "false",
@@ -76,6 +77,7 @@ const Editor = () => {
                 <Ruler />
                 <div className='py-4 print:p-0'>
                     <EditorContent editor={editor} />
+                    <Threads editor={editor} />
                 </div>
             </div>
         </div>

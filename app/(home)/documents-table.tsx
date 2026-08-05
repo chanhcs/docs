@@ -18,7 +18,7 @@ import { RenameDialog } from "@/components/rename-dialog";
 
 interface DocumentsTableProps {
     documents: Doc<"documents">[],
-    loadMore: (numItems: number) => void,
+    loadMore: () => void,
     status: PaginationStatus,
 }
 
@@ -50,15 +50,15 @@ const DocumentsTable = ({ documents, loadMore, status }: DocumentsTableProps) =>
                     </TableBody>
                 )}
             </Table>
-            {documents.length !== 0 && (
+            {(status === "CanLoadMore" || status === "LoadingMore") && (
                 <div className="flex justify-center mt-4">
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => loadMore(5)}
-                        disabled={status !== "CanLoadMore"}
+                        onClick={loadMore}
+                        disabled={status === "LoadingMore"}
                     >
-                        {status === "CanLoadMore" ? "Load more" : "End of results"}
+                        {status === "LoadingMore" ? "Loading..." : "Load more"}
                     </Button>
                 </div>
             )}

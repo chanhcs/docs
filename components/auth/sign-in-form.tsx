@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useSignIn } from "@clerk/nextjs";
 import { GoogleIcon } from "./google-icon";
 import { PasswordInput } from "./password-input";
 import { getErrorMessage } from "./errors";
-import { toast } from "sonner";
 
 export function SignInForm() {
     const { signIn, fetchStatus } = useSignIn();
@@ -16,13 +15,22 @@ export function SignInForm() {
 
     const isSubmitting = fetchStatus === "fetching";
 
+    useEffect(() => {
+        function handlePageShow(event: PageTransitionEvent) {
+            if (event.persisted) {
+                setGoogleLoading(false);
+            }
+        }
+        window.addEventListener("pageshow", handlePageShow);
+        return () => window.removeEventListener("pageshow", handlePageShow);
+    }, []);
+
     function showError(err: unknown, fallback: string) {
         const message = getErrorMessage(err, fallback);
         setError(message);
-        toast.error(message);
     }
 
-    async function handleSubmit(e: FormEvent) {
+    async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setError(null);
         try {

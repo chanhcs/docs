@@ -3,22 +3,18 @@ import Navbar from "./navbar";
 import { Room } from "./room";
 import Toolbar from "./toolbar";
 
-interface DocumentIdPageProps {
-    params: Promise<{ documentId: string }>
-}
-
-const documentIdPage = async ({ params }: DocumentIdPageProps) => {
-    const { documentId } = await params;
+const documentIdPage = async () => {
     return (
-        <div className="min-h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
-            <div className="flex flex-col px-4 pt-2 gap-2">
-                <Navbar />
-                <Toolbar />
-            </div>
-            <Room>
+        <Room>
+            <div className="min-h-screen flex flex-col bg-[#FAFBFD] print:h-auto">
+                <div className="flex flex-col px-4 pt-2 gap-2">
+                    <Navbar />
+                    <Toolbar />
+                </div>
                 <Editor />
-            </Room>
-        </div>
+            </div>
+        </Room>
+
     );
 };
 
