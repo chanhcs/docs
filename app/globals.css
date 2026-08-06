@@ -253,6 +253,14 @@
   }
 }
 
+.lb-dropdown {
+  z-index: 60;
+}
+
+.lb-root.lb-tooltip {
+  display: none;
+}
+
 /* For mobile */
 .floating-threads {
   display: none;

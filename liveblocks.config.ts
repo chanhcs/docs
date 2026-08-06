@@ -26,7 +26,9 @@ declare global {
     ThreadMetadata: Record<string, never>; // Ví dụ: { x: number; y: number }
 
     // Custom room info set with resolveRoomsInfo, for useRoomInfo
-    RoomInfo: Record<string, never>; // Ví dụ: { title: string; url: string }
+    RoomInfo: {
+      name: string;
+    };
   }
 }
 
