@@ -1,12 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useEditorStore } from '@/app/store/use-editor-store'
+import { DEFAULT_MARGIN, useMargins } from './use-margins'
 import { cn } from '@/lib/utils'
 
 const PAGE_WIDTH = 816
 const MINIMUM_SPACE = 100
-const DEFAULT_MARGIN = 96
 const UNIT = 96 / 2.54
 const QUARTER = UNIT / 4
 
@@ -41,7 +40,7 @@ const RulerMarker = ({ position, isLeft, isDragging, onMouseDown, onDoubleClick 
 }
 
 const Ruler = () => {
-    const { leftMargin, rightMargin, setLeftMargin, setRightMargin } = useEditorStore()
+    const { leftMargin, rightMargin, setLeftMargin, setRightMargin } = useMargins()
     const [dragging, setDragging] = useState<'left' | 'right' | null>(null)
     const rulerRef = useRef<HTMLDivElement>(null)
 

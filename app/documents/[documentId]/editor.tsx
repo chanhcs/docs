@@ -11,6 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Ruler from './ruler'
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { Threads } from './threads'
+import { useMargins } from './use-margins'
 
 const editorAttributes = (leftMargin: number, rightMargin: number) => ({
     spellcheck: "false",
@@ -19,7 +20,8 @@ const editorAttributes = (leftMargin: number, rightMargin: number) => ({
 })
 
 const Editor = () => {
-    const { setEditor, leftMargin, rightMargin } = useEditorStore();
+    const { setEditor } = useEditorStore();
+    const { leftMargin, rightMargin } = useMargins();
     const liveblocks = useLiveblocksExtension();
 
     const editor = useEditor({

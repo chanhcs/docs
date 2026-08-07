@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { DEFAULT_MARGIN } from "./use-margins";
 
 type User = { id: string; name: string; avatar: string }
 
@@ -90,7 +91,13 @@ export function Room({ children }: { children: ReactNode }) {
             }}
         >
             <RoomErrorSurface roomId={roomId} />
-            <RoomProvider id={roomId}>
+            <RoomProvider
+                id={roomId}
+                initialStorage={{
+                    leftMargin: DEFAULT_MARGIN,
+                    rightMargin: DEFAULT_MARGIN,
+                }}
+            >
                 <ClientSideSuspense fallback={<Loader label="Room loading..." />}>
                     {children}
                 </ClientSideSuspense>

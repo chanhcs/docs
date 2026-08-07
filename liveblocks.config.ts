@@ -2,34 +2,28 @@
 // https://liveblocks.io/docs/api-reference/liveblocks-react#Typing-your-data
 declare global {
   interface Liveblocks {
-    // Each user's Presence, for useMyPresence, useOthers, etc.
-    Presence: Record<string, never>; // Ví dụ: { cursor: { x: number; y: number } }
+    Presence: Record<string, never>;
+    Storage: {
+      leftMargin: number;
+      rightMargin: number;
+    };
 
-    // The Storage tree for the room, for useMutation, useStorage, etc.
-    Storage: Record<string, never>; // Ví dụ: { animals: LiveList<string> }
-
-    // Custom user info set when authenticating with a secret key
     UserMeta: {
       id: string;
-      // Thông tin user gửi kèm khi authenticate — dùng cho useSelf, useUser, useOthers
       info: {
         name: string;
         avatar: string;
       };
     };
 
-    // Custom events, for useBroadcastEvent, useEventListener
-    // Ví dụ: { type: "PLAY" } | { type: "REACTION"; emoji: "🔥" }
     RoomEvent: Record<string, never>;
 
-    // Custom metadata set on threads, for useThreads, useCreateThread, etc.
-    ThreadMetadata: Record<string, never>; // Ví dụ: { x: number; y: number }
+    ThreadMetadata: Record<string, never>;
 
-    // Custom room info set with resolveRoomsInfo, for useRoomInfo
     RoomInfo: {
       name: string;
     };
   }
 }
 
-export {};
+export { };
