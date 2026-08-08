@@ -16,7 +16,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { DEFAULT_MARGIN } from "./use-margins";
 
-type User = { id: string; name: string; avatar: string }
+type User = { id: string; name: string; avatar: string; color: string }
 
 function RoomErrorSurface({ roomId }: { roomId: string }) {
     const [error, setError] = useState<Error | null>(null);

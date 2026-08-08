@@ -1,6 +1,7 @@
 "use server";
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getUserColor } from "@/lib/user-color";
 
 export async function getUsers() {
     const { orgId } = await auth();
@@ -19,6 +20,7 @@ export async function getUsers() {
         id: user.id,
         name: user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
         avatar: user.imageUrl,
+        color: getUserColor(user.id),
     }));
 
     return users;

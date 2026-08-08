@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { Avatars } from './avatar';
 import { Inbox } from './inbox';
+import { DocumentInput } from './document-input';
 
 const Navbar = () => {
     return (
@@ -11,7 +12,7 @@ const Navbar = () => {
                 <Link href='/'>
                     <Image src='/logo.svg' alt='logo' height={28} width={28} />
                 </Link>
-                <span>Untitle Document</span>
+                <DocumentInput />
             </div>
             <div className="flex items-center gap-2">
                 <Inbox />
