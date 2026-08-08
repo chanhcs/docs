@@ -66,6 +66,7 @@ export const get = query({
         .withIndex("by_organization_id", (q) =>
           q.eq("organizationId", organizationId)
         )
+        .order("desc")
         .paginate(args.paginationOpts);
     }
 
@@ -81,6 +82,7 @@ export const get = query({
     return await ctx.db
       .query("documents")
       .withIndex("by_owner_id", (q) => q.eq("ownerId", user.subject))
+      .order("desc")
       .paginate(args.paginationOpts);
   },
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import {
     LiveblocksProvider,
     RoomProvider,
@@ -43,20 +43,23 @@ export function Room({ children }: { children: ReactNode }) {
     const params = useParams();
     const roomId = params.documentId as string;
     const convex = useConvex();
-    const [users, setUsers] = useState<User[]>([])
+    const usersPromiseRef = useRef<Promise<User[]> | null>(null)
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const data = await getUsers();
-                setUsers(data)
-            } catch (error) {
+    const fetchUsers = useCallback(() => {
+        if (!usersPromiseRef.current) {
+            usersPromiseRef.current = getUsers().catch((error) => {
                 console.log(error);
                 toast.error("Failed to fetch users")
-            }
+                usersPromiseRef.current = null;
+                return [] as User[];
+            })
         }
-        fetchUser()
+        return usersPromiseRef.current;
     }, [])
+
+    useEffect(() => {
+        fetchUsers()
+    }, [fetchUsers])
 
     return (
         <LiveblocksProvider
@@ -71,13 +74,15 @@ export function Room({ children }: { children: ReactNode }) {
                 });
                 return await response.json();
             }}
-            resolveUsers={({ userIds }) => {
-                return userIds.map(userId => users.find(user => user.id === userId))
+            resolveUsers={async ({ userIds }) => {
+                const list = await fetchUsers();
+                return userIds.map(userId => list.find(user => user.id === userId))
             }}
-            resolveMentionSuggestions={({ text }) => {
-                let filteredUsers = users;
+            resolveMentionSuggestions={async ({ text }) => {
+                const list = await fetchUsers();
+                let filteredUsers = list;
                 if (text) {
-                    filteredUsers = users.filter(user => user.name.toLowerCase().includes(text.toLowerCase()))
+                    filteredUsers = list.filter(user => user.name.toLowerCase().includes(text.toLowerCase()))
                 }
                 return filteredUsers.map(user => user.id);
             }}

@@ -96,7 +96,7 @@ const Ruler = () => {
     }
 
     return (
-        <div className='sticky top-0 z-10 bg-[#F9FBFD] pt-1.5 print:hidden'>
+        <div className='sticky top-0 z-10 bg-[#F9FBFD] pt-1.5 max-lg:hidden print:hidden'>
             <div ref={rulerRef} className='relative h-5 w-204 select-none'>
                 {marks}
                 <RulerMarker

@@ -47,7 +47,7 @@ const TemplatesGallery = () => {
                         {templates.map(template => (
                             <CarouselItem
                                 key={template.id}
-                                onClick={() => handleTemplateClick(template.label, "")}
+                                onClick={() => handleTemplateClick(template.label, template.initialContent)}
                                 className={cn(
                                     "pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6",
                                     isCreating && "pointer-events-none opacity-50"

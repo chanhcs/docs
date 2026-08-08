@@ -40,7 +40,7 @@ const ToolbarButton = ({ icon: Icon, onClick, isActive, disabled }: ToolbarButto
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
+                "text-sm h-7 min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
                 isActive && "bg-neutral-200/80",
                 disabled && "opacity-50 pointer-events-none"
             )}
@@ -185,7 +185,7 @@ const FontSizeButton = () => {
     };
 
     return (
-        <div className="relative flex items-center gap-x-0.5">
+        <div className="relative flex shrink-0 items-center gap-x-0.5">
             <button
                 title="Decrease font size"
                 onClick={() => stepFontSize(-1)}
@@ -298,7 +298,7 @@ const TextColorButton = () => {
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger className="h-7 min-w-7 flex flex-col items-center justify-center gap-y-0.5 rounded-sm hover:bg-neutral-200/80 px-1">
+            <DropdownMenuTrigger className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center gap-y-0.5 rounded-sm hover:bg-neutral-200/80 px-1">
                 <span className="size-4 flex items-center justify-center text-sm font-medium leading-none">A</span>
                 <div
                     className="h-1 w-4 rounded-xs border border-neutral-300"
@@ -391,7 +391,7 @@ const HighlightColorButton = () => {
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger className="h-7 min-w-7 flex flex-col items-center justify-center gap-y-0.5 rounded-sm hover:bg-neutral-200/80 px-1">
+            <DropdownMenuTrigger className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center gap-y-0.5 rounded-sm hover:bg-neutral-200/80 px-1">
                 <HighlighterIcon className="size-4" />
                 <div
                     className="h-1 w-4 rounded-xs border border-neutral-300"
@@ -489,7 +489,7 @@ const LinkButton = () => {
             <PopoverTrigger
                 title="Insert link"
                 className={cn(
-                    "h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
+                    "h-7 min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
                     isActive && "bg-neutral-200/80"
                 )}
             >
@@ -553,7 +553,7 @@ const ImageButton = () => {
             <DropdownMenu>
                 <DropdownMenuTrigger
                     title="Insert image"
-                    className="h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80"
+                    className="h-7 min-w-7 shrink-0 flex items-center justify-center rounded-sm hover:bg-neutral-200/80"
                 >
                     <ImageIcon className="size-4" />
                 </DropdownMenuTrigger>
@@ -624,7 +624,7 @@ const AlignButton = () => {
         <DropdownMenu>
             <DropdownMenuTrigger
                 title="Align"
-                className="h-7 min-w-7 px-1 flex items-center justify-center gap-x-0.5 rounded-sm hover:bg-neutral-200/80"
+                className="h-7 min-w-7 shrink-0 px-1 flex items-center justify-center gap-x-0.5 rounded-sm hover:bg-neutral-200/80"
             >
                 <CurrentIcon className="size-4" />
                 <ChevronDownIcon className="size-3" />
@@ -733,23 +733,23 @@ const Toolbar = () => {
         ]
     ]
     return (
-        <div className="bg-[#f0f4f9] min-h-10 rounded-2xl flex items-center gap-x-0.5 px-4">
+        <div className="bg-[#f0f4f9] min-h-10 rounded-2xl flex items-center gap-x-0.5 px-4 max-lg:flex-wrap max-lg:justify-center max-lg:gap-y-1 max-lg:px-2 max-lg:py-1.5">
             {sections[0].map(item => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
-            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 shrink-0 data-vertical:self-center bg-neutral-300" />
             <FontFamilyButton />
-            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 shrink-0 data-vertical:self-center bg-neutral-300" />
             <HeadingLevelButton />
-            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 shrink-0 data-vertical:self-center bg-neutral-300" />
             <FontSizeButton />
-            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 shrink-0 data-vertical:self-center bg-neutral-300" />
             {sections[1].map(item => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
             <TextColorButton />
             <HighlightColorButton />
-            <Separator orientation='vertical' className="h-6 mx-0.5 data-vertical:self-center bg-neutral-300" />
+            <Separator orientation='vertical' className="h-6 mx-0.5 shrink-0 data-vertical:self-center bg-neutral-300" />
             <LinkButton />
             <ImageButton />
             <AlignButton />

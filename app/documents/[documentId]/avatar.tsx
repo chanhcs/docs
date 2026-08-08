@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { ClientSideSuspense } from "@liveblocks/react";
+import { ClientSideSuspense, useUser } from "@liveblocks/react";
 import { useOthers, useSelf } from "@liveblocks/react/suspense";
 import { Separator } from "@/components/ui/separator";
 
 interface AvatarProps {
-    src: string;
-    name: string;
+    userId: string;
+    fallback: { name: string; avatar: string };
+    name?: string;
 };
 
 export const Avatars = () => {
@@ -29,13 +30,13 @@ const AvatarStack = () => {
             <div className="flex items-center">
                 {currentUser && (
                     <div className="relative ml-2">
-                        <Avatar src={currentUser.info.avatar} name="You" />
+                        <Avatar userId={currentUser.id} fallback={currentUser.info} name="You" />
                     </div>
                 )}
                 <div className="flex">
-                    {users.map(({ connectionId, info }) => {
+                    {users.map(({ connectionId, id, info }) => {
                         return (
-                            <Avatar key={connectionId} src={info.avatar} name={info.name} />
+                            <Avatar key={connectionId} userId={id} fallback={info} />
                         )
                     })}
                 </div>
@@ -45,14 +46,18 @@ const AvatarStack = () => {
     )
 }
 
-const Avatar = ({ src, name }: AvatarProps) => {
+const Avatar = ({ userId, fallback, name }: AvatarProps) => {
+    const { user } = useUser(userId);
+    const src = user?.avatar ?? fallback.avatar;
+    const label = name ?? user?.name ?? fallback.name;
+
     return (
         <div className="group -ml-2 flex size-8 shrink-0 place-content-center relative border-2 border-white rounded-full bg-gray-400">
             <div className="opacity-0 group-hover:opacity-100 absolute top-full py-1 px-2 text-white text-xs rounded-lg mt-2.5 z-10 bg-black whitespace-nowrap transition-opacity" >
-                {name}
+                {label}
             </div>
             <Image
-                alt={name}
+                alt={label}
                 src={src}
                 fill
                 sizes="32px"

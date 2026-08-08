@@ -49,7 +49,7 @@ export const DocumentInput = () => {
 
     if (isEditing) {
         return (
-            <form onSubmit={handleSubmit} className='relative inline-grid items-center'>
+            <form onSubmit={handleSubmit} className='relative inline-grid items-center min-w-0 max-w-full'>
                 <span className='invisible col-start-1 row-start-1 whitespace-pre px-1.5 py-0.5'>
                     {value || ' '}
                 </span>
@@ -76,7 +76,7 @@ export const DocumentInput = () => {
                 setValue(title)
                 setIsEditing(true)
             }}
-            className='max-w-96 truncate rounded-sm px-1.5 py-0.5 text-left hover:ring-1 hover:ring-neutral-300 cursor-text'
+            className='min-w-0 max-w-96 truncate rounded-sm px-1.5 py-0.5 text-left hover:ring-1 hover:ring-neutral-300 cursor-text'
         >
             {title}
         </button>
