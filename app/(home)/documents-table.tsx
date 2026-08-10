@@ -93,7 +93,7 @@ const DocumentRow = ({ document }: DocumentRowProps) => {
             <TableCell className="hidden sm:table-cell text-muted-foreground">
                 <div className="flex items-center gap-2">
                     {document.organizationId ? <Building2Icon className="size-4" /> : <CircleUserIcon className="size-4" />}
-                    {document.organizationId ? "Organization" : "Presonal"}
+                    {document.organizationId ? "Organization" : "Personal"}
                 </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">{format(document._creationTime, "MMM d, yyyy")}</TableCell>
